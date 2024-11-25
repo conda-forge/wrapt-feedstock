@@ -5,7 +5,7 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/w/wrapt/wrapt-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/w/wrapt/wrapt-{{ version }}.tar.gz
   sha256: 16187aa2317c731170a88ef35e8937ae0f533c402872c1ee5e6d079fcf320801
 
 build:
