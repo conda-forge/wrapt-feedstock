@@ -1,0 +1,49 @@
+schema_version: 1
+
+context:
+  version: "2.4.0"
+
+package:
+  name: wrapt
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/w/wrapt/wrapt-${{ version }}.tar.gz
+  sha256: 7082fc1f94b020ac275870c4af71b09cff22876fe6e9c4c0ad01ea21d217b288
+
+build:
+  number: 0
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  build:
+    - if: build_platform != target_platform
+      then:
+        - cross-python_${{ target_platform }}
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
+  host:
+    - python
+    - setuptools >=62.0
+    - pip
+  run:
+    - python
+
+tests:
+  - python:
+      imports:
+        - wrapt
+      pip_check: true
+
+about:
+  summary: Module for decorators, wrappers and monkey patching.
+  license: BSD-2-Clause
+  license_file: LICENSE
+  homepage: https://github.com/GrahamDumpleton/wrapt
+  documentation: https://wrapt.readthedocs.io/
+
+extra:
+  recipe-maintainers:
+    - jakirkham
+    - nehaljwani
+    - ocefpaf
