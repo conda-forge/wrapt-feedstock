@@ -7,16 +7,9 @@ Home: https://github.com/GrahamDumpleton/wrapt
 
 Package license: BSD-2-Clause
 
-Summary: Module for decorators, wrappers and monkey patching
+Summary: Module for decorators, wrappers and monkey patching.
 
-Development: https://github.com/GrahamDumpleton/wrapt
-
-Documentation: http://wrapt.readthedocs.org/en/latest/
-
-The aim of the wrapt module is to provide a transparent object proxy for
-Python, which can be used as the basis for the construction of function
-wrappers and decorator functions.
-
+Documentation: https://wrapt.readthedocs.io/
 
 Current build status
 ====================
