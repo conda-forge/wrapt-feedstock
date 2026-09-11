@@ -12,28 +12,54 @@ source:
   sha256: 7082fc1f94b020ac275870c4af71b09cff22876fe6e9c4c0ad01ea21d217b288
 
 build:
-  number: 1
-  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 2
+  noarch: ${{ "python" if use_noarch }}
+  script:
+    content: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+    env:
+      # forces the pure-Python fallback instead of compiling the C extension
+      WRAPT_INSTALL_EXTENSIONS: ${{ "false" if use_noarch else "true" }}
+  variant:
+    # prefer the compiled variant over the noarch one when both are installable
+    down_prioritize_variant: ${{ 1 if use_noarch else 0 }}
 
 requirements:
   build:
-    - if: build_platform != target_platform
+    - if: not use_noarch
       then:
-        - cross-python_${{ target_platform }}
-    - ${{ compiler("c") }}
-    - ${{ stdlib("c") }}
+        - if: build_platform != target_platform
+          then:
+            - cross-python_${{ target_platform }}
+        - ${{ compiler("c") }}
+        - ${{ stdlib("c") }}
   host:
-    - python
+    - if: use_noarch
+      then:
+        - python ${{ python_min }}.*
+      else:
+        - python
     - setuptools >=62.0
     - pip
   run:
-    - python
+    - if: use_noarch
+      then:
+        - python >=${{ python_min }}
+      else:
+        - python
 
 tests:
-  - python:
-      imports:
-        - wrapt
-      pip_check: true
+  - if: use_noarch
+    then:
+      - python:
+          imports:
+            - wrapt
+          pip_check: true
+          python_version: ${{ python_min }}.*
+    else:
+      - python:
+          imports:
+            - wrapt
+          pip_check: true
 
 about:
   summary: Module for decorators, wrappers and monkey patching.
